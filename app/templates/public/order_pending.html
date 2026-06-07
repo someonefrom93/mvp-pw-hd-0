@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}¡Pedido confirmado! · Jochos El Perro Wero{% endblock %}
+{% block content %}
+<main class="container">
+  <section class="order-pending">
+    <img src="/static/img/wero-mascot.svg" alt="Wero" class="order-pending__mascot">
+    <h1 class="order-pending__title">¡Gracias por tu pedido, {{ customer_name }}!</h1>
+    <p class="order-pending__number">Número de pedido: <strong>{{ numero_orden }}</strong></p>
+    <a href="/ordenes/{{ numero_orden }}/whatsapp" class="btn btn-magenta">Continuar a WhatsApp</a>
+    <a href="/" class="btn btn-outline">Volver al inicio</a>
+  </section>
+</main>
+{% endblock %}

@@ -1,5 +1,4 @@
-{# cart_summary.html — cart modal items list only; NO customer form fields #}
-{# This partial is expanded by change-004-cart-whatsapp #}
+{# cart_summary.html — cart modal items list + customer form #}
 <div class="cart-summary" id="cart-summary">
   {% if WeroCart.isEmpty() %}
     <p style="text-align: center; color: rgba(255,255,255,0.6); font-family: var(--font-display); font-size: 1.1rem; text-transform: uppercase; padding: 2rem 0;">
@@ -40,5 +39,27 @@
         {{ WeroCart.totalQty() }} artículo{{ 's' if WeroCart.totalQty() != 1 else '' }}
       </span>
     </div>
+    <form id="order-form" class="cart-form">
+      <h3 class="cart-form__title">Tus datos</h3>
+      <div class="form-row">
+        <label class="form-label" for="nombre">Nombre</label>
+        <input class="form-input" type="text" name="nombre" id="nombre" required minlength="2" maxlength="120">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="telefono">Teléfono (10 dígitos)</label>
+        <input class="form-input" type="tel" name="telefono" id="telefono" required pattern="\d{10,15}">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="edad">Edad</label>
+        <input class="form-input" type="number" name="edad" id="edad" required min="1" max="120">
+      </div>
+      <div class="form-row">
+        <span class="form-label">Género</span>
+        <label class="form-radio"><input type="radio" name="genero" value="M" required> M</label>
+        <label class="form-radio"><input type="radio" name="genero" value="F"> F</label>
+        <label class="form-radio"><input type="radio" name="genero" value="Otro"> Otro</label>
+      </div>
+      <button type="submit" class="btn btn-magenta btn-block">Confirmar pedido</button>
+    </form>
   {% endif %}
 </div>
