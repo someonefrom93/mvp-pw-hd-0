@@ -24,3 +24,11 @@ class OrderResponse(BaseModel):
     total: float
     whatsapp_url: str
     customer_name: str
+
+
+class AdminLogin(BaseModel):
+    password: str = Field(..., min_length=1, max_length=200)
+
+
+class BannerUpdate(BaseModel):
+    banner_text: str = Field(..., min_length=1, max_length=500)

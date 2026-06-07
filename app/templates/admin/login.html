@@ -1,0 +1,30 @@
+{% extends "base_admin.html" %}
+
+{% block admin_content %}
+<div class="admin-login-wrapper">
+  <div class="admin-login-card">
+    <h1 class="admin-login__title">Panel Wero</h1>
+    <p class="admin-login__subtitle">Ingresa la contraseña de administrador</p>
+
+    {% if error %}
+    <div class="admin-flash admin-flash--error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/admin/login" class="admin-form">
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-input"
+          placeholder="Contraseña"
+          autofocus
+          required
+        >
+      </div>
+      <button type="submit" class="btn btn--magenta btn--full">Entrar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

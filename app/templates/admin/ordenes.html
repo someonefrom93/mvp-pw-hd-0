@@ -1,0 +1,34 @@
+{% extends "base_admin.html" %}
+
+{% block admin_content %}
+<div class="admin-container">
+  <h1 class="admin-page-title">Órdenes Recientes</h1>
+
+  {% if orders %}
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th># Orden</th>
+        <th>Fecha / Hora</th>
+        <th>Cliente</th>
+        <th>Items</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{ o.numero_orden }}</td>
+        <td>{{ o.fecha_hora }}</td>
+        <td>{{ o.customer_name }}</td>
+        <td>{{ o.num_items }}</td>
+        <td class="text-amarillo">${{ "%.2f"|format(o.total) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="admin-empty">Aún no hay pedidos registrados.</p>
+  {% endif %}
+</div>
+{% endblock %}
