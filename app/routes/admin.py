@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -26,7 +26,7 @@ def login_form(request: Request):
     if token and verify_session_token(token):
         return RedirectResponse(url="/admin/", status_code=303)
     return templates.TemplateResponse(
-        "admin/login.html", {"request": request, "error": None}
+        request, "admin/login.html", {"error": None}
     )
 
 
@@ -38,8 +38,9 @@ def login_submit(
     """Validate password, set signed cookie, redirect to dashboard."""
     if not check_password(password):
         return templates.TemplateResponse(
+            request,
             "admin/login.html",
-            {"request": request, "error": "Contraseña incorrecta"},
+            {"error": "Contraseña incorrecta"},
             status_code=200,
         )
     token = create_session_token()
@@ -73,7 +74,7 @@ def dashboard(request: Request):
     admin = get_current_admin(request)
     if isinstance(admin, RedirectResponse):
         return admin
-    return templates.TemplateResponse("admin/dashboard.html", {"request": request})
+    return templates.TemplateResponse(request, "admin/dashboard.html", {})
 
 
 # ---------------------------------------------------------------------------
@@ -95,8 +96,9 @@ def inventario(
         ).fetchall()
         productos = [Producto.from_row(r) for r in rows]
     return templates.TemplateResponse(
+        request,
         "admin/inventario.html",
-        {"request": request, "productos": productos, "updated": updated},
+        {"productos": productos, "updated": updated},
     )
 
 
@@ -136,8 +138,9 @@ def banner_form(
         ).fetchone()
     current = row["valor"] if row else ""
     return templates.TemplateResponse(
+        request,
         "admin/banner.html",
-        {"request": request, "current_banner": current, "updated": updated},
+        {"current_banner": current, "updated": updated},
     )
 
 
@@ -194,5 +197,5 @@ def ordenes(request: Request):
                 "customer_name": cliente["nombre"] if cliente else "N/A",
             })
     return templates.TemplateResponse(
-        "admin/ordenes.html", {"request": request, "orders": orders}
+        request, "admin/ordenes.html", {"orders": orders}
     )
