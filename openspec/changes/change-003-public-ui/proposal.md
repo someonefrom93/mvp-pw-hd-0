@@ -10,24 +10,32 @@ This change is the **first half** of the UI work. The admin panel lands in the f
 
 ## Scope (this change only)
 
-### In
+### In (UI shell only — no checkout yet)
 - `app/static/css/components.css` — reusable component styles (buttons, cards, hero, footer, forms, modal, starburst)
 - `app/static/img/placeholder-*.svg` — generated SVG placeholders for the 6 products
-- `app/schemas.py` — Pydantic models: `CartItem`, `CustomerData`, `OrderCreate`, `OrderResponse`
-- `app/routes/public.py` (modified) — `GET /`, `POST /ordenes`, `GET /ordenes/{numero_orden}/whatsapp`
-- `app/templates/public/` (new) — `home.html`, `order_pending.html`
-- `app/templates/public/partials/` (new) — `product_card.html`, `cart_summary.html`
-- `app/static/js/cart.js` — vanilla JS cart logic backed by localStorage
-- `app/static/js/order.js` — fetch POST /ordenes, redirect to WhatsApp
 - `app/static/img/wero-mascot.svg` — simple SVG version of the "Wero" dog mascot
-- `pyproject.toml` — add `itsdangerous` dep (for admin session, also used to sign cart data)
-- Seed update: add 6 placeholder images in `app/static/img/`
+- `app/routes/public.py` (modified) — `GET /` only (NOT the order endpoints — those are in `change-004-cart-whatsapp`)
+- `app/templates/public/home.html` (new) — home page with banner, location, menu grid, social buttons, cart modal
+- `app/templates/public/partials/product_card.html` (new) — single product card partial
+- `app/templates/public/partials/cart_summary.html` (new) — cart modal items list (NO customer form fields — those go in change-004)
+- `app/static/js/cart.js` — `WeroCart` object backed by localStorage; cart:add/remove/update/clear; emits `cart:change` event; hooks the "Añadir al carrito" buttons
+- `pyproject.toml` — add `itsdangerous` dep
+- `app/templates/base.html` — add `<link>` to `components.css` (1 line)
 
-### Out (deferred to `change-004-admin-ui`)
+### Out (deferred to `change-004-cart-whatsapp`)
+- `app/schemas.py` — Pydantic v2 models for `CartItem`, `CustomerData`, `OrderCreate`, `OrderResponse`
+- `app/routes/public.py` — `POST /ordenes`, `GET /ordenes/{numero_orden}/whatsapp`
+- `app/static/js/order.js` — form submit handler that POSTs `/ordenes` and redirects to WhatsApp
+- `app/templates/public/order_pending.html` — "¡Gracias por tu pedido!" page
+- `app/templates/public/partials/cart_summary.html` modification — add customer form fields
+- Server-side helpers: `format_order_message`, `build_whatsapp_url`
+- Atomic transaction logic for cliente upsert + ordenes insert
+
+### Out (deferred to `change-005-admin-ui`)
 - Admin login, inventory panel, banner editor, orders viewer
 - Real product images (placeholders only)
 - Image upload
-- Pydantic models for admin forms (`AdminLogin`, `BannerUpdate`) — those live in change-004
+- Pydantic models for admin forms (`AdminLogin`, `BannerUpdate`)
 
 ## Approach
 
