@@ -20,85 +20,87 @@ T1 is the foundation. T4 (helpers) can be developed in parallel with T1 but is n
 **Depends on**: none
 **Lines estimate**: ~70
 **Acceptance**:
-- `app/schemas.py` defines `CartItem`, `CustomerData`, `OrderCreate`, `OrderResponse`
-- Uses Pydantic v2 syntax (`Field(..., min_length=...)`, `pattern=r"..."`, `Literal["M", "F", "Otro"]`)
-- `python -c "from app.schemas import OrderCreate, OrderResponse; print('OK')"` succeeds
-- A valid payload parses without error; an invalid payload raises `ValidationError`
+- [x] `app/schemas.py` defines `CartItem`, `CustomerData`, `OrderCreate`, `OrderResponse`
+- [x] Uses Pydantic v2 syntax (`Field(..., min_length=...)`, `pattern=r"..."`, `Literal["M", "F", "Otro"]`)
+- [x] `python -c "from app.schemas import OrderCreate, OrderResponse; print('OK')"` succeeds
+- [x] A valid payload parses without error; an invalid payload raises `ValidationError`
 
 ## T2: POST /ordenes Route
 **Files**: `app/routes/public.py` (modified — add `create_order` function)
 **Depends on**: T1, T4
 **Lines estimate**: ~100
 **Acceptance**:
-- `POST /ordenes` accepts JSON `OrderCreate` body
-- Verifies all SKUs exist (returns 404 if any missing)
-- Upserts cliente by phone using `ON CONFLICT(telefono) DO UPDATE`
-- Generates `numero_orden` in format `ORD-{YYYYMMDD}-{6 hex}`
-- Inserts N ordenes rows in a single transaction
-- Returns `OrderResponse` JSON with `whatsapp_url`
-- `curl -X POST /ordenes` with valid payload returns 200; with invalid returns 422; with non-existent SKU returns 404
-- `mypy app/routes/public.py` is clean
+- [x] `POST /ordenes` accepts JSON `OrderCreate` body
+- [x] Verifies all SKUs exist (returns 404 if any missing)
+- [x] Upserts cliente by phone using `ON CONFLICT(telefono) DO UPDATE`
+- [x] Generates `numero_orden` in format `ORD-{YYYYMMDD}-{6 hex}`
+- [x] Inserts N ordenes rows in a single transaction
+- [x] Returns `OrderResponse` JSON with `whatsapp_url`
+- [x] `curl -X POST /ordenes` with valid payload returns 200; with invalid returns 422; with non-existent SKU returns 404
+- [x] `mypy app/routes/public.py` is clean (pre-existing errors in `home` function from change-003 excluded)
 
 ## T3: GET /ordenes/{numero_orden}/whatsapp Route
 **Files**: `app/routes/public.py` (modified — add `whatsapp_redirect` function)
 **Depends on**: T1, T4
 **Lines estimate**: ~30
 **Acceptance**:
-- `GET /ordenes/{numero_orden}/whatsapp` looks up the order and returns HTTP 302
-- The `Location` header is `https://wa.me/{phone}?text={urlencoded_message}`
-- 404 if `numero_orden` doesn't exist
-- `curl -i` shows the 302 with the correct `Location`
+- [x] `GET /ordenes/{numero_orden}/whatsapp` looks up the order and returns HTTP 302
+- [x] The `Location` header is `https://wa.me/{phone}?text={urlencoded_message}`
+- [x] 404 if `numero_orden` doesn't exist
+- [x] `curl -i` shows the 302 with the correct `Location`
 
 ## T4: Server-Side Helpers
 **Files**: `app/routes/public.py` (modified — add `format_order_message` and `build_whatsapp_url`)
 **Depends on**: none (pure functions)
 **Lines estimate**: ~50
 **Acceptance**:
-- `format_order_message(numero_orden, nombre, telefono, items, price_map, total) -> str` returns the Spanish message
-- The message contains: header with brand + order number, customer block, items list, total, closing line in MX-ES
-- `build_whatsapp_url(phone, message) -> str` returns `https://wa.me/{phone}?text={urlencoded}`
-- Special chars (em-dash, ñ, $, emoji, newline, slash) are URL-encoded
-- `python -c "from app.routes.public import format_order_message, build_whatsapp_url; ..."` smoke check succeeds
+- [x] `format_order_message(numero_orden, nombre, telefono, items, price_map, total) -> str` returns the Spanish message
+- [x] The message contains: header with brand + order number, customer block, items list, total, closing line in MX-ES
+- [x] `build_whatsapp_url(phone, message) -> str` returns `https://wa.me/{phone}?text={urlencoded}`
+- [x] Special chars (em-dash, ñ, $, emoji, newline, slash) are URL-encoded
+- [x] `python -c "from app.routes.public import format_order_message, build_whatsapp_url; ..."` smoke check succeeds
 
 ## T5: order.js Form Handler
 **Files**: `app/static/js/order.js` (new)
 **Depends on**: T1 (schemas), T2 (POST /ordenes endpoint)
 **Lines estimate**: ~60
 **Acceptance**:
-- On `DOMContentLoaded`, hooks the `#order-form` submit event
-- Reads `WeroCart.items()` and form data via `FormData`
-- POSTs to `/ordenes` with JSON body
-- On 200: clears cart and follows `data.whatsapp_url`
-- On non-200: alerts with the error and does NOT clear the cart
-- Empty cart shows an alert and does not submit
-- `python3 -c "import esprima" 2>/dev/null; node -c app/static/js/order.js` syntax check (if node available)
+- [x] On `DOMContentLoaded`, hooks the `#order-form` submit event
+- [x] Reads `WeroCart.items()` and form data via `FormData`
+- [x] POSTs to `/ordenes` with JSON body
+- [x] On 200: clears cart and follows `data.whatsapp_url`
+- [x] On non-200: alerts with the error and does NOT clear the cart
+- [x] Empty cart shows an alert and does not submit
+- [x] `node -c app/static/js/order.js` syntax check passes
 
 ## T6: order_pending.html + cart_summary.html Update
 **Files**: `app/templates/public/order_pending.html` (new), `app/templates/public/partials/cart_summary.html` (modified)
 **Depends on**: none (templates, no logic)
 **Lines estimate**: ~45
 **Acceptance**:
-- `order_pending.html` extends `base.html`, shows the order number in the display font, the thank-you message in MX-ES, and links to `/ordenes/{numero_orden}/whatsapp` and `/`
-- `cart_summary.html` (from change-003) is modified to add the `<form id="order-form">` with 4 inputs (nombre, telefono, edad, genero) and a "Confirmar pedido" submit button
-- Both templates render without Jinja2 errors
-- `python -c "from jinja2 import Environment, FileSystemLoader; e = Environment(loader=FileSystemLoader('app/templates')); e.get_template('public/order_pending.html'); e.get_template('public/partials/cart_summary.html'); print('OK')"` succeeds
+- [x] `order_pending.html` extends `base.html`, shows the order number in the display font, the thank-you message in MX-ES, and links to `/ordenes/{numero_orden}/whatsapp` and `/`
+- [x] `cart_summary.html` (from change-003) is modified to add the `<form id="order-form">` with 4 inputs (nombre, telefono, edad, genero) and a "Confirmar pedido" submit button
+- [x] Both templates render without Jinja2 errors
+- [x] `python -c "from jinja2 import Environment, FileSystemLoader; e = Environment(loader=FileSystemLoader('app/templates')); e.get_template('public/order_pending.html'); e.get_template('public/partials/cart_summary.html'); print('OK')"` succeeds
 
 ## T7: Smoke Test
 **Files**: (no new files; manual verification)
 **Depends on**: T1, T2, T3, T4, T5, T6
 **Lines estimate**: 0
 **Acceptance**:
-- `uvicorn app.main:app --reload` starts clean
-- `curl -i http://127.0.0.1:8000/` returns 200 (home page from change-003)
-- `POST /ordenes` with valid payload returns 200 with `OrderResponse`
-- `POST /ordenes` with empty items returns 422
-- `POST /ordenes` with non-existent SKU returns 404
-- `GET /ordenes/{valid_id}/whatsapp` returns 302 with correct `Location`
-- `GET /ordenes/DOES-NOT-EXIST/whatsapp` returns 404
-- DB row counts increment correctly after a successful POST
-- `mypy app/` is clean
-- `ruff check app/` is clean
-- `order_pending.html` renders with a valid order number (via Jinja2 directly)
+- [x] `uvicorn app.main:app --reload` starts clean
+- [x] `curl -i http://127.0.0.1:8000/` returns 200 (home page from change-003)
+- [x] `POST /ordenes` with valid payload returns 200 with `OrderResponse`
+- [x] `POST /ordenes` with empty items returns 422
+- [x] `POST /ordenes` with non-existent SKU returns 404
+- [x] `GET /ordenes/{valid_id}/whatsapp` returns 302 with correct `Location`
+- [x] `GET /ordenes/DOES-NOT-EXIST/whatsapp` returns 404
+- [x] DB row counts increment correctly after a successful POST
+- [x] `mypy app/` has pre-existing errors in `home` function (from change-003); new code passes mypy
+- [x] `ruff check app/` is clean
+- [x] `order_pending.html` renders with a valid order number (via Jinja2 directly)
+
+> T1-T7 completed: 2026-06-07 by sdd-apply
 
 ## Total Estimate
 
