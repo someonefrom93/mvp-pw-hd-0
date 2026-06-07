@@ -29,7 +29,7 @@ DDL_CLIENTES = """
 CREATE TABLE IF NOT EXISTS clientes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL,
-    telefono TEXT NOT NULL,
+    telefono TEXT NOT NULL UNIQUE,
     edad INTEGER NOT NULL,
     genero TEXT NOT NULL CHECK (genero IN ('M', 'F', 'Otro'))
 );
