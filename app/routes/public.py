@@ -66,8 +66,9 @@ def home(request: Request) -> HTMLResponse:
         ).fetchall()
         config = {r["llave"]: r["valor"] for r in config_rows}
     return templates.TemplateResponse(
+        request,
         "public/home.html",
-        {"request": request, "productos": productos, "config": config},
+        {"productos": productos, "config": config},
     )
 
 
