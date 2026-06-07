@@ -1,0 +1,79 @@
+project: el-perro-wero-hotdogsandburgers-1
+project_path: /Users/juanangeleshernandez/Desktop/mvp_test/el-perro-wero-hotdogsAndBurgers-1
+language: es-MX
+language_note: >
+  Mexican Spanish with urban slang. All UI copy, banners, taglines, and content
+  in the public client UI and the hidden admin UI must be written in Mexican
+  Spanish. Voseo is not required (the business is B2C, not user-facing in the
+  informal-tu sense), but slangy, energetic, playful register is mandatory.
+
+context: |
+  Greenfield web app for "Jochos El Perro Wero", a Mexican street-food business
+  selling hot dogs ("jochos") and hamburgers. Single FastAPI backend serves both
+  a public client UI and a hidden password-protected admin UI. Persistence is
+  SQLite (3 tables: clientes, ordenes, configuracion). The visual identity is
+  Mexican urban pop-art: Royal Blue, Magenta Pink, Yellow, with a yellow "Wero"
+  dog mascot, comic-book starbursts, and a football (soccer) cultural vibe
+  (Cruz Azul + Pumas references). Reference imagery lives in ads-samples/.
+
+stack:
+  runtime: Python 3.11+
+  framework: FastAPI
+  templating: Jinja2
+  database: SQLite (3 tables: clientes, ordenes, configuracion)
+  frontend: vanilla JS + custom CSS (no React, no Vue, no Tailwind)
+  server_role: single FastAPI process serves client UI, admin UI, and API
+  font_intent: bold condensed display (Bebas Neue / Anton / Impact family)
+  palette:
+    primary: "#1E3A8A"  # Royal Blue
+    accent:  "#EC4899"  # Magenta Pink
+    highlight: "#FACC15"  # Yellow
+  reference_images: ads-samples/el-perro-wero-{1..5}.jpg
+
+preflight:
+  execution_mode: interactive          # A1
+  artifact_store: openspec             # B1
+  chained_pr_strategy: ask-always      # C1
+  review_budget_lines: 400             # D1
+
+testing:
+  strict_tdd: false
+  strict_tdd_reason: >
+    Greenfield project — no test runner, no pyproject.toml, no requirements.txt
+    detected. strict_tdd stays off until a real runner is configured.
+  runner:
+    command: "pytest"
+    framework: pytest
+  layers:
+    unit:        pytest
+    integration: pytest + httpx (FastAPI TestClient)
+    e2e:         none-recommended
+  coverage:
+    available: false
+    command: "pytest --cov=app --cov-report=term-missing"   # once pytest-cov is added
+  quality:
+    linter:       none-detected (recommend: ruff)
+    type_checker: none-detected (recommend: mypy)
+    formatter:    none-detected (recommend: black)
+
+phases:
+  proposal:
+    artifact: openspec/changes/<id>/proposal.md
+  spec:
+    artifact: openspec/changes/<id>/specs/**
+  design:
+    artifact: openspec/changes/<id>/design.md
+  tasks:
+    artifact: openspec/changes/<id>/tasks.md
+  apply:
+    artifact: source tree (not stored under openspec/)
+  verify:
+    artifact: openspec/changes/<id>/verify.md
+  archive:
+    artifact: openspec/changes/archive/<id>/**
+
+git:
+  initialized: false
+  note: >
+    Repo is not a git working tree per env detection. Do NOT run `git init`
+    during sdd-init; that decision belongs to the user / orchestrator.
