@@ -1,0 +1,48 @@
+{% extends "base_admin.html" %}
+
+{% block admin_content %}
+<div class="admin-container">
+  <h1 class="admin-page-title">Inventario</h1>
+
+  {% if updated %}
+  <div class="admin-flash">Producto {{ updated }} actualizado</div>
+  {% endif %}
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in productos %}
+      <tr>
+        <td>{{ p.sku }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.categoria }}</td>
+        <td>${{ "%.2f"|format(p.precio) }}</td>
+        <td>
+          {% if p.disponible %}
+          <span class="status-badge status-badge--available">Disponible</span>
+          {% else %}
+          <span class="status-badge status-badge--soldout">Agotado</span>
+          {% endif %}
+        </td>
+        <td>
+          <form method="post" action="/admin/inventario/{{ p.sku }}/toggle" style="display:inline">
+            <button type="submit" class="toggle-button {% if p.disponible %}toggle-button--soldout{% else %}toggle-button--available{% endif %}">
+              {% if p.disponible %}Desactivar{% else %}Activar{% endif %}
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

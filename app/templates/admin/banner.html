@@ -1,0 +1,28 @@
+{% extends "base_admin.html" %}
+
+{% block admin_content %}
+<div class="admin-container">
+  <h1 class="admin-page-title">Banner Promocional</h1>
+
+  {% if updated %}
+  <div class="admin-flash">Banner actualizado correctamente</div>
+  {% endif %}
+
+  <p class="admin-page-desc">Edita el texto que aparece en el banner de la página principal.</p>
+
+  <form method="post" action="/admin/banner" class="admin-form">
+    <div class="form-group">
+      <label for="banner_text" class="form-label">Texto del banner</label>
+      <textarea
+        id="banner_text"
+        name="banner_text"
+        class="form-input form-textarea"
+        rows="3"
+        maxlength="500"
+        placeholder="Escribe el texto del banner..."
+      >{{ current_banner }}</textarea>
+    </div>
+    <button type="submit" class="btn btn--magenta">Guardar</button>
+  </form>
+</div>
+{% endblock %}

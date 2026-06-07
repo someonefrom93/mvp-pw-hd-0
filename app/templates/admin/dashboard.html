@@ -1,0 +1,27 @@
+{% extends "base_admin.html" %}
+
+{% block admin_content %}
+<div class="admin-container">
+  <h1 class="admin-page-title">¡Bienvenido al panel de administración, Wero!</h1>
+
+  <div class="admin-dashboard">
+    <a href="/admin/inventario" class="admin-nav-card">
+      <div class="admin-nav-card__icon">📦</div>
+      <div class="admin-nav-card__title">Inventario</div>
+      <div class="admin-nav-card__desc">Activar / Desactivar productos</div>
+    </a>
+
+    <a href="/admin/banner" class="admin-nav-card">
+      <div class="admin-nav-card__icon">📣</div>
+      <div class="admin-nav-card__title">Banner</div>
+      <div class="admin-nav-card__desc">Editar texto promocional</div>
+    </a>
+
+    <a href="/admin/ordenes" class="admin-nav-card">
+      <div class="admin-nav-card__icon">📋</div>
+      <div class="admin-nav-card__title">Órdenes</div>
+      <div class="admin-nav-card__desc">Ver pedidos recientes</div>
+    </a>
+  </div>
+</div>
+{% endblock %}

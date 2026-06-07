@@ -2,11 +2,22 @@
 
 {% block title %}Admin · Jochos El Perro Wero{% endblock %}
 
-{% block content %}
-<header class="admin-topbar">Admin Panel</header>
-{% block admin_content %}{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="/static/css/admin.css">
 {% endblock %}
 
-{% block extra_scripts %}
-{% block admin_scripts %}{% endblock %}
+{% block content %}
+<header class="admin-topbar">
+  <nav class="admin-topbar__nav">
+    <a href="/admin/" class="admin-topbar__link{% if request.url.path == '/admin/' %} admin-topbar__link--active{% endif %}">Dashboard</a>
+    <a href="/admin/inventario" class="admin-topbar__link{% if request.url.path == '/admin/inventario' %} admin-topbar__link--active{% endif %}">Inventario</a>
+    <a href="/admin/banner" class="admin-topbar__link{% if request.url.path == '/admin/banner' %} admin-topbar__link--active{% endif %}">Banner</a>
+    <a href="/admin/ordenes" class="admin-topbar__link{% if request.url.path == '/admin/ordenes' %} admin-topbar__link--active{% endif %}">Órdenes</a>
+    <a href="/admin/logout" class="admin-topbar__link admin-topbar__link--logout">Salir</a>
+  </nav>
+</header>
+
+<main class="admin-main">
+  {% block admin_content %}{% endblock %}
+</main>
 {% endblock %}
