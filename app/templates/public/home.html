@@ -58,27 +58,49 @@
   </button>
 
   {# ── Cart Modal ─────────────────────────────────────────── #}
-  <div class="modal modal--cart" role="dialog" aria-modal="true" aria-label="Tu carrito">
+  <div class="modal modal--cart" id="cart-modal" role="dialog" aria-modal="true" aria-label="Tu carrito">
     <div class="modal__backdrop"></div>
     <div class="modal__content">
       <button class="modal__close" aria-label="Cerrar" type="button">×</button>
       <h2 style="font-family: var(--font-display); font-size: 1.8rem; text-transform: uppercase; margin: 0 0 1.5rem; color: var(--color-amarillo);">
         Tu Carrito
       </h2>
-      {# cart_summary partial — items list only; form fields in change-004 #}
+
+      {# Items list — rendered dynamically by cart.js #}
       <div id="cart-items-container">
-        <p style="text-align: center; color: rgba(255,255,255,0.6); font-family: var(--font-display); font-size: 1.1rem; text-transform: uppercase; padding: 2rem 0;">
-          Tu carrito está vacío
-        </p>
+        <p class="cart-empty">Tu carrito está vacío</p>
       </div>
-      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2); text-align: right;">
-        <button class="btn btn-magenta btn-block" disabled type="button" id="btn-confirmar">
-          Confirmar pedido
+
+      {# Total — shown only when cart has items (toggled by JS) #}
+      <div id="cart-total" style="display: none; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2); text-align: right;">
+        <span style="font-family: var(--font-display); font-size: 1.5rem; color: var(--color-amarillo);">
+          Total: $<span id="cart-total-amount">0</span>
+        </span>
+      </div>
+
+      {# Customer form — shown only when cart has items (toggled by JS) #}
+      <form id="order-form-section" style="display: none; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);">
+        <h3 style="font-family: var(--font-display); font-size: 1.2rem; text-transform: uppercase; color: var(--color-amarillo); margin: 0 0 1rem;">
+          Tus datos
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <input class="form-input" type="text" name="nombre" placeholder="Nombre" required minlength="2" maxlength="120" style="background: rgba(255,255,255,0.1); color: var(--color-white);">
+          <input class="form-input" type="tel" name="telefono" placeholder="Teléfono (10 dígitos)" required pattern="[0-9]{10,15}" style="background: rgba(255,255,255,0.1); color: var(--color-white);">
+          <div style="display: flex; gap: 0.75rem;">
+            <input class="form-input" type="number" name="edad" placeholder="Edad" required min="1" max="120" style="flex: 1; background: rgba(255,255,255,0.1); color: var(--color-white);">
+            <select class="form-input" name="genero" required style="flex: 1; background: rgba(255,255,255,0.1); color: var(--color-white);">
+              <option value="">Género</option>
+              <option value="M">M</option>
+              <option value="F">F</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-magenta btn-block" type="submit" id="btn-confirmar" disabled style="margin-top: 1.5rem;">
+          Pedir por WhatsApp
         </button>
-        <p style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.5rem; text-align: center;">
-          (El checkout llega en el próximo paso)
-        </p>
-      </div>
+      </form>
     </div>
   </div>
 </main>
@@ -127,5 +149,10 @@
 {% endblock %}
 
 {% block extra_scripts %}
+{# Inject runtime config for the JS modules #}
+<script>
+  window.WERO_WHATSAPP_PHONE = "{{ config.whatsapp_numero }}";
+</script>
 <script src="/static/js/cart.js" defer></script>
+<script src="/static/js/order.js" defer></script>
 {% endblock %}
