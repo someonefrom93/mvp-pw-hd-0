@@ -203,3 +203,24 @@ Revert the merge commit on `main` for `change-003-public-ui` or `change-004-admi
 - Companion: `change-001-foundation/` (lands first)
 - Companion: `change-002-db-seed/` (lands first)
 - Future: `change-005-...` for follow-ups (real images, payment, accounts)
+
+
+---
+
+## Status (closed 2026-06-07)
+
+All 3 sub-changes were implemented, verified, merged, and archived:
+
+| # | Change | PR | Status | Commits | LOC |
+|---|--------|----|--------|---------|-----|
+| 1 | `change-003-public-ui` (UI shell) | #2 | ✅ Merged | 8 | ~850 (size:exception) |
+| 2 | `change-004-cart-whatsapp` (transactional) | #3 | ✅ Merged | 8 | ~295 |
+| 3 | `change-005-admin-ui` (admin panel) | #4 | ✅ Merged | 8 | ~660 (size:exception) |
+
+**Final MVP state**: a fully functional local web app for "Jochos El Perro Wero" — customers can browse the menu, add to cart, place an order, and get a WhatsApp redirect; admins can log in with `wero123`, toggle Sold Out per product, edit the banner in real time, and view recent orders.
+
+**Total PRs in the chain**: 4 (change-001-foundation + 3 sub-changes above). All foundation specs (4) + UI specs (4) + checkout specs (2) + admin specs (2) = 12 canonical capabilities in `openspec/specs/`.
+
+**Archive**: all 4 changes are in `openspec/changes/archive/2026-06-07-*/`.
+
+**Run locally**: `uvicorn app.main:app --reload` and open http://127.0.0.1:8000/ (customer) and http://127.0.0.1:8000/admin/login (admin, password `wero123`).
