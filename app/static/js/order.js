@@ -1,52 +1,27 @@
-/* Checkout — simplified to just open WhatsApp with the order details.
-   No DB persistence (the business receives the order via WhatsApp).
-   Pure ES2020 — no build step, no dependencies.
+/* Checkout — POSTs the order to /ordenes (DB persistence for the
+   admin orders viewer), then redirects to the WhatsApp URL returned
+   by the server. Pure ES2020 — no build step, no dependencies.
 */
 
-const PHONE_FALLBACK = '525555555555';
-
-function buildOrderMessage(customer, items) {
-  const lines = [
-    '🐶 *Jochos El Perro Wero* — Nuevo pedido',
-    '',
-    `*Cliente:* ${customer.nombre}`,
-    `*Teléfono:* ${customer.telefono}`,
-    `*Edad:* ${customer.edad}`,
-    `*Género:* ${customer.genero}`,
-    '',
-    '*Tu pedido:*',
-  ];
-  let total = 0;
-  for (const item of items) {
-    const subtotal = item.precio * item.cantidad;
-    lines.push(`• ${item.cantidad}x ${item.nombre} — $${subtotal.toFixed(0)}`);
-    total += subtotal;
-  }
-  lines.push(
-    '',
-    `*Total:* $${total.toFixed(0)}`,
-    '',
-    '¡Confirma por aquí y te lo llevamos en un periquito 🌭'
-  );
-  return lines.join('\n');
-}
+const PHONE_FALLBACK = '4421231234'; // TODO: replace with the real business number
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('order-form');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const items = WeroCart.items();
     if (items.length === 0) {
       alert('Tu carrito está vacío');
       return;
     }
+
     const fd = new FormData(form);
     const customer = {
       nombre: String(fd.get('nombre') || '').trim(),
       telefono: String(fd.get('telefono') || '').trim(),
-      edad: String(fd.get('edad') || '').trim(),
+      edad: parseInt(fd.get('edad'), 10),
       genero: String(fd.get('genero') || '').trim(),
     };
 
@@ -55,14 +30,40 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const phone = window.WERO_WHATSAPP_PHONE || PHONE_FALLBACK;
-    const message = buildOrderMessage(customer, items);
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-    // Close the modal, clear the cart, then redirect
+    // Close the modal immediately for UX (we'll redirect next)
     document.querySelector('.modal--cart')?.classList.remove('modal--open');
     document.body.style.overflow = '';
-    WeroCart.clear();
-    window.location.href = url;
+
+    // Clear the form so reopening the cart shows fresh fields
+    form.reset();
+
+    try {
+      const resp = await fetch('/ordenes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, customer }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ detail: 'Error desconocido' }));
+        alert('Error al crear el pedido: ' + (err.detail || resp.statusText));
+        return;
+      }
+
+      const data = await resp.json();
+
+      // Order is saved in the DB (visible in /admin/ordenes).
+      // Clear the cart and redirect to WhatsApp with the formatted order.
+      WeroCart.clear();
+
+      // Prefer the server-returned whatsapp_url (it has the right phone
+      // and message). Fallback to the window-injected phone if missing.
+      const url = data.whatsapp_url
+        || `https://wa.me/${window.WERO_WHATSAPP_PHONE || PHONE_FALLBACK}?text=${encodeURIComponent('Pedido desde Jochos El Perro Wero')}`;
+
+      window.location.href = url;
+    } catch (err) {
+      alert('Error de red: ' + err.message);
+    }
   });
 });

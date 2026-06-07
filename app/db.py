@@ -77,7 +77,7 @@ SEED_CONFIG: dict[str, str] = {
     "banner_promocion": "¡SÚPER PROMO! 2 Hamburguesas con Tocino + Papas por $200",
     "horarios_texto":   "Jueves a Domingo · 19:00 — 02:00 hrs",
     "ubicacion_texto":  "Paseos del Pedregal · Envío a domicilio GRATIS por la zona",
-    "whatsapp_numero":  "525555555555",
+    "whatsapp_numero":  "4421231234",  # TODO: replace with the real business number
     "facebook_url":     "https://facebook.com/jochoselperrowero",
     "didi_food_url":    "https://didifood.com/jochos",
 }
