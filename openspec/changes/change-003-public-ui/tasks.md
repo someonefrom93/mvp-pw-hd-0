@@ -19,104 +19,115 @@ T1 (CSS) and T3 (JS) are independent. T2 depends on T1 and T3 (partials use CSS 
 **Files**: `app/static/css/components.css` (new)
 **Depends on**: none
 **Lines estimate**: ~250
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- File contains all component classes per `component-css` spec: `.btn`, `.btn-magenta`, `.btn-amarillo`, `.btn-outline`, `.btn-block`, `.btn:hover`, `.btn:active`, `.btn:disabled`, `.card`, `.card-producto`, `.card-producto:hover`, `.card--soldout`, `.hero-banner`, `.hero-banner__starburst`, `.location-block`, `.menu-grid`, `.site-footer`, `.form-input`, `.form-label`, `.form-error`, `.modal`, `.modal__backdrop`, `.modal__content`, `.modal--cart`, `.cart-fab`, `.cart-fab__count`, `.container`, `.visually-hidden`
-- Uses CSS custom properties from `tokens.css` (no hardcoded colors)
-- Responsive breakpoints at 640px and 960px
-- BEM-lite naming convention
-- `curl http://127.0.0.1:8000/static/css/components.css` returns 200
+- [x] File contains all component classes per `component-css` spec: `.btn`, `.btn-magenta`, `.btn-amarillo`, `.btn-outline`, `.btn-block`, `.btn:hover`, `.btn:active`, `.btn:disabled`, `.card`, `.card-producto`, `.card-producto:hover`, `.card--soldout`, `.hero-banner`, `.hero-banner__starburst`, `.location-block`, `.menu-grid`, `.site-footer`, `.form-input`, `.form-label`, `.form-error`, `.modal`, `.modal__backdrop`, `.modal__content`, `.modal--cart`, `.cart-fab`, `.cart-fab__count`, `.container`, `.visually-hidden`
+- [x] Uses CSS custom properties from `tokens.css` (no hardcoded colors)
+- [x] Responsive breakpoints at 640px and 960px
+- [x] BEM-lite naming convention
+- [x] `curl http://127.0.0.1:8000/static/css/components.css` returns 200
 
 ## T2: Template Partials
 **Files**: `app/templates/public/partials/product_card.html` (new), `app/templates/public/partials/cart_summary.html` (new — items list only, NO customer form)
 **Depends on**: T1 (CSS classes used)
 **Lines estimate**: ~45
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- `product_card.html` accepts a `Producto` dataclass and renders: image (placeholder SVG), name (uppercase, display font), description, price (yellow starburst badge), "Añadir al carrito" button with `data-sku`, quantity input
-- For `disponible=0`: shows "Agotado" badge, no button, `card--soldout` class
-- `cart_summary.html` renders the cart modal items list with quantity controls and subtotals (NO customer form fields — those are added in `change-004-cart-whatsapp`)
-- Both render without Jinja2 errors
+- [x] `product_card.html` accepts a `Producto` dataclass and renders: image (placeholder SVG), name (uppercase, display font), description, price (yellow starburst badge), "Añadir al carrito" button with `data-sku`, quantity input
+- [x] For `disponible=0`: shows "Agotado" badge, no button, `card--soldout` class
+- [x] `cart_summary.html` renders the cart modal items list with quantity controls and subtotals (NO customer form fields — those are added in `change-004-cart-whatsapp`)
+- [x] Both render without Jinja2 errors
 
 ## T3: WeroCart JS Object
 **Files**: `app/static/js/cart.js` (new)
 **Depends on**: none (vanilla JS, no deps)
 **Lines estimate**: ~80
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- `WeroCart` is a global object with methods: `items()`, `add(sku, qty)`, `remove(sku)`, `update(sku, qty)`, `clear()`, `count()`, `totalQty()`, `isEmpty()`
-- Backed by `localStorage` key `wero_cart_v1`
-- Emits `cart:change` CustomEvent on the document on every mutation
-- On `DOMContentLoaded`: hooks all `[data-sku]` buttons to call `WeroCart.add` and updates the cart-fab count badge
-- Syntax check passes (browser console or `node -c` if available)
+- [x] `WeroCart` is a global object with methods: `items()`, `add(sku, qty)`, `remove(sku)`, `update(sku, qty)`, `clear()`, `count()`, `totalQty()`, `isEmpty()`
+- [x] Backed by `localStorage` key `wero_cart_v1`
+- [x] Emits `cart:change` CustomEvent on the document on every mutation
+- [x] On `DOMContentLoaded`: hooks all `[data-sku]` buttons to call `WeroCart.add` and updates the cart-fab count badge
+- [x] Syntax check passes
 
 ## T4: Home Page Template
 **Files**: `app/templates/public/home.html` (new)
 **Depends on**: T1, T2, T5, T6
 **Lines estimate**: ~80
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- Extends `base.html`
-- Contains 5 sections in order: hero banner, location/hours, menu grid, cart trigger, footer
-- Hero banner shows `config.banner_promocion` text
-- Menu grid iterates over `productos` and renders `product_card.html` for each
-- Cart-fab (`.cart-fab`) with `data-cart-fab` attribute and a count badge
-- Includes `cart.js` and `order.js` at the end of body (order.js is a no-op stub until change-004; the file doesn't exist yet, so this is optional or a comment placeholder)
-- Footer with Facebook + DiDi Food social links from `config.facebook_url` and `config.didi_food_url`
-- Renders without Jinja2 errors
+- [x] Extends `base.html`
+- [x] Contains 5 sections in order: hero banner, location/hours, menu grid, cart trigger, footer
+- [x] Hero banner shows `config.banner_promocion` text
+- [x] Menu grid iterates over `productos` and renders `product_card.html` for each
+- [x] Cart-fab (`.cart-fab`) with `data-cart-fab` attribute and a count badge
+- [x] Includes `cart.js` at the end of body
+- [x] Footer with Facebook + DiDi Food social links from `config.facebook_url` and `config.didi_food_url`
+- [x] Renders without Jinja2 errors
 
 ## T5: SVG Assets
 **Files**: `app/static/img/wero-mascot.svg` (new), `app/static/img/placeholder-JO-001.svg` through `placeholder-HB-003.svg` (6 new files)
 **Depends on**: none
 **Lines estimate**: ~150 (mostly hand-crafted SVG)
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- `wero-mascot.svg`: yellow body, magenta mohawk, black sunglasses, spiked collar, simple cartoon dog face
-- Each `placeholder-{sku}.svg`: 400x400 viewBox, magenta-to-yellow gradient background, centered product name, "PLACEHOLDER" label, small dog emoji in corner
-- All 7 files are served as `image/svg+xml` with HTTP 200
-- `curl http://127.0.0.1:8000/static/img/wero-mascot.svg` returns 200
+- [x] `wero-mascot.svg`: yellow body, magenta mohawk, black sunglasses, spiked collar, simple cartoon dog face
+- [x] Each `placeholder-{sku}.svg`: 400x400 viewBox, magenta-to-yellow gradient background, centered product name, "PLACEHOLDER" label, small dog emoji in corner
+- [x] All 7 files are served as `image/svg+xml` with HTTP 200
+- [x] `curl http://127.0.0.1:8000/static/img/wero-mascot.svg` returns 200
 
 ## T6: Base Template Link Update
 **Files**: `app/templates/base.html` (modified — 1 line added)
 **Depends on**: T1
 **Lines estimate**: 1
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- `<link rel="stylesheet" href="/static/css/components.css">` is added AFTER the `main.css` link in `<head>`
-- Load order is: tokens.css → main.css → components.css
-- The change is a single-line addition (or replacement of the existing main.css link block)
+- [x] `<link rel="stylesheet" href="/static/css/components.css">` is added AFTER the `main.css` link in `<head>`
+- [x] Load order is: tokens.css → main.css → components.css
+- [x] The change is a single-line addition
 
 ## T7: pyproject.toml Dependency
 **Files**: `pyproject.toml` (modified)
 **Depends on**: none
 **Lines estimate**: 1
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- `itsdangerous>=2.1` is added to runtime dependencies (for forward compat with `change-004-cart-whatsapp` and `change-005-admin-ui` cookie sessions)
-- `pip install -e ".[dev]"` succeeds
+- [x] `itsdangerous>=2.1` is added to runtime dependencies (for forward compat with `change-004-cart-whatsapp` and `change-005-admin-ui` cookie sessions)
+- [x] `pip install -e ".[dev]"` succeeds
 
 ## T8: Home Route Handler
 **Files**: `app/routes/public.py` (modified — add `home` function)
 **Depends on**: T5 (for SVG paths), T2 (for partials)
 **Lines estimate**: ~25
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- `GET /` returns HTTP 200 with `text/html; charset=utf-8`
-- Loads `productos` from DB (all, not filtered by `disponible` — the template handles sold-out display)
-- Loads `configuracion` rows as a dict `{llave: valor}`
-- Returns `templates.TemplateResponse("public/home.html", {"request": request, "productos": productos, "config": config})`
-- `curl -i http://127.0.0.1:8000/` returns 200 and the HTML contains "Jochos El Perro Wero"
+- [x] `GET /` returns HTTP 200 with `text/html; charset=utf-8`
+- [x] Loads `productos` from DB (all, not filtered by `disponible` — the template handles sold-out display)
+- [x] Loads `configuracion` rows as a dict `{llave: valor}`
+- [x] Returns `templates.TemplateResponse(request, "public/home.html", {"productos": productos, "config": config})`
+- [x] `curl -i http://127.0.0.1:8000/` returns 200 and the HTML contains "Jochos El Perro Wero"
 
 ## T9: Smoke Test
 **Files**: (no new files; manual verification)
 **Depends on**: T1, T2, T3, T4, T5, T6, T7, T8
 **Lines estimate**: 0
+**Status**: ✅ COMPLETE
 **Acceptance**:
-- `uvicorn app.main:app --reload` starts clean
-- `curl -i http://127.0.0.1:8000/` returns 200 with the home page
-- `curl -i http://127.0.0.1:8000/static/css/components.css` returns 200
-- `curl -i http://127.0.0.1:8000/static/js/cart.js` returns 200
-- `curl -i http://127.0.0.1:8000/static/img/wero-mascot.svg` returns 200 with `Content-Type: image/svg+xml`
-- All 6 placeholder SVGs return 200
-- The HTML contains the banner text from `configuracion.banner_promocion`
-- The HTML contains 6 product cards (one per SKU)
-- A sold-out product (set `disponible=0` manually) renders with "Agotado" badge
-- The page is responsive at 320px, 414px, 1024px viewports
-- `mypy app/` is clean
-- `ruff check app/` is clean
-- `POST /ordenes` returns 404 or 405 (not yet implemented — that's change-004)
+- [x] `uvicorn app.main:app --reload` starts clean
+- [x] `curl -i http://127.0.0.1:8000/` returns 200 with the home page
+- [x] `curl -i http://127.0.0.1:8000/static/css/components.css` returns 200
+- [x] `curl -i http://127.0.0.1:8000/static/js/cart.js` returns 200
+- [x] `curl -i http://127.0.0.1:8000/static/img/wero-mascot.svg` returns 200 with `Content-Type: image/svg+xml`
+- [x] All 6 placeholder SVGs return 200
+- [x] The HTML contains the banner text from `configuracion.banner_promocion`
+- [x] The HTML contains 6 product cards (one per SKU)
+- [x] A sold-out product (set `disponible=0` manually) renders with "Agotado" badge
+- [x] The page is responsive at 320px, 414px, 1024px viewports
+- [x] `mypy app/` is clean
+- [x] `ruff check app/` is clean
+- [x] `POST /ordenes` returns 404 or 405 (not yet implemented — that's change-004)
+
+> T1–T9 completed: 2026-06-07 by sdd-apply
 
 ## Total Estimate
 
