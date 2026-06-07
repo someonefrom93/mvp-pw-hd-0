@@ -15,16 +15,16 @@ This change is a prerequisite for `change-001-foundation`'s lifespan wire-up.
 **Depends on**: none
 **Lines estimate**: ~150 (db.py ~120 + models.py ~60, minus shared boilerplate ≈ 150)
 **Acceptance**:
-- `app/db.py` defines:
+- [x] `app/db.py` defines:
   - `DB_PATH = "el_perro_wero.db"`
   - `DDL_PRODUCTOS`, `DDL_CLIENTES`, `DDL_ORDENES`, `DDL_CONFIGURACION` string constants
   - `SEED_PRODUCTOS` (6 rows), `SEED_CLIENTES` (2 rows), `SEED_CONFIG` (6 key-value pairs)
   - `get_db()` context manager that sets `row_factory=sqlite3.Row` and `PRAGMA foreign_keys = ON`
   - `init_db()` that creates tables idempotently, seeds productos/clientes only if empty, and uses `INSERT OR IGNORE` for configuracion
-- `app/models.py` defines 4 frozen dataclasses (`Producto`, `Cliente`, `ConfigKey`, `OrdenLine`) each with a `from_row()` classmethod
-- `python -c "from app.db import init_db; init_db()"` creates `el_perro_wero.db` with 4 tables and 14 seed rows total
-- Calling `init_db()` a second time does not duplicate any seed row
-- `python -c "from app.models import Producto; from app.db import get_db; ..."` (smoke check) succeeds
+- [x] `app/models.py` defines 4 frozen dataclasses (`Producto`, `Cliente`, `ConfigKey`, `OrdenLine`) each with a `from_row()` classmethod
+- [x] `python -c "from app.db import init_db; init_db()"` creates `el_perro_wero.db` with 4 tables and 14 seed rows total
+- [x] Calling `init_db()` a second time does not duplicate any seed row
+- [x] `python -c "from app.models import Producto; from app.db import get_db; ..."` (smoke check) succeeds
 
 **Smoke test commands** (to be run by the implementer):
 ```bash
@@ -103,3 +103,5 @@ This change must land FIRST. After it merges, `app/main.py` in change-001-founda
 - **Design**: `design.md`
 - **Proposal**: `proposal.md`
 - **Companion change** (lands second): `../change-001-foundation/`
+
+> T2 completed: 2026-06-07 by sdd-apply
