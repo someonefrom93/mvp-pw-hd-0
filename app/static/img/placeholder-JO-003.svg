@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EC4899"/>
+      <stop offset="100%" style="stop-color:#FACC15"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#g3)"/>
+  <text x="200" y="170" text-anchor="middle" font-family="Bebas Neue, Impact, sans-serif" font-size="36" fill="#FFFFFF">JOCHO</text>
+  <text x="200" y="210" text-anchor="middle" font-family="Bebas Neue, Impact, sans-serif" font-size="36" fill="#FFFFFF">ITALIANO</text>
+  <text x="200" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" fill="rgba(255,255,255,0.7)">PLACEHOLDER</text>
+  <text x="370" y="385" text-anchor="end" font-size="28">🐶</text>
+</svg>

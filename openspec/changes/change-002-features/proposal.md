@@ -1,11 +1,12 @@
 # Change 002-Features — Full UI (Public + Admin)
 
-> **Umbrella change**. This proposal covers the full ~800-1000 LOC UI work. To keep each PR under the 400-line review budget, this umbrella is split into 2 sub-changes that land in stacked-to-main order:
+> **Umbrella change**. This proposal covers the full ~800-1000 LOC UI work. To keep each PR under the 400-line review budget, this umbrella is split into 3 sub-changes that land in stacked-to-main order:
 >
-> - **`change-003-public-ui`** (~450-550 LOC) — public client UI: banner, location, menu grid, cart, customer form, WhatsApp checkout, social buttons + the component CSS for the Mexican urban identity
-> - **`change-004-admin-ui`** (~300-400 LOC) — admin login, inventory toggles, banner editor, orders table
+> - **`change-003-public-ui`** (~430-480 LOC) — public client UI SHELL: home page, banner, location, menu grid, social buttons, WeroCart object (vanilla JS, localStorage), component CSS for the Mexican urban identity, mascot SVG, product placeholders. **NO checkout yet.**
+> - **`change-004-cart-whatsapp`** (~260-310 LOC) — transactional layer on top of change-003: Pydantic v2 schemas, `POST /ordenes` with atomic cliente upsert + ordenes insert, `GET /ordenes/{id}/whatsapp` redirect, `order.js` form handler, `order_pending.html`, WhatsApp message formatter.
+> - **`change-005-admin-ui`** (~300-400 LOC) — admin login, inventory toggles, banner editor, orders viewer.
 >
-> PR order: PR #3 = `change-003-public-ui` (lands first), PR #4 = `change-004-admin-ui` (lands second, depends on public-ui's CSS components).
+> PR order: PR #3 = `change-003-public-ui` (lands first), PR #4 = `change-004-cart-whatsapp` (lands second, depends on change-003's WeroCart and components.css), PR #5 = `change-005-admin-ui` (lands last, depends on all of the above).
 
 ## Why
 
@@ -58,22 +59,49 @@ The foundation (`change-001-foundation` + `change-002-db-seed`) gives us a worki
 ## Sub-change Split — `change-003-public-ui` (PR #3)
 
 ### Scope
-- All public UI: banner, location, menu grid, cart, customer form, WhatsApp, social buttons
-- Component CSS (`components.css`)
-- Pydantic models for `CartItem`, `CustomerData`, `OrderCreate`, `OrderResponse`
-- Routes in `app/routes/public.py`: `GET /`, `POST /ordenes`, `GET /ordenes/{numero_orden}/whatsapp`
-- ~450-550 LOC
+- All public UI SHELL: banner, location, menu grid, social buttons, customer form UI, WeroCart object (vanilla JS, localStorage), component CSS (`components.css`)
+- `app/schemas.py` (NEW) — Pydantic models
+- Routes in `app/routes/public.py`: `GET /` only (NOT the order endpoints)
+- `app/templates/public/home.html` (NEW)
+- `app/templates/public/partials/product_card.html`, `cart_summary.html` (NEW)
+- `app/static/css/components.css` (NEW)
+- `app/static/js/cart.js` (NEW) — WeroCart object
+- `app/static/img/wero-mascot.svg` + 6 placeholder SVGs (NEW)
+- `pyproject.toml` — add `itsdangerous` dep
+- `app/templates/base.html` — add `<link>` to components.css (1 line)
+- **NOT in scope (deferred to `change-004-cart-whatsapp`):** `POST /ordenes`, `GET /ordenes/{id}/whatsapp`, `app/static/js/order.js`, `app/templates/public/order_pending.html`, server-side order persistence, WhatsApp message formatter
+- ~430-480 LOC
 
-### Why split
-- The full UI is too large for one PR (would be ~800-1000 LOC)
-- Public UI and admin UI are independent enough to review separately
-- Admin UI can wait until public UI is deployed and exercised
+### Why split (first half)
+- Static UI and transactional logic are independent review surfaces
+- The WeroCart object can be tested visually in the browser without the order endpoint
 
 ### Stacked-to-main position
-- Lands after `change-001-foundation` and `change-002-db-seed` are merged
-- Does NOT depend on `change-004-admin-ui`
+- Lands after `change-001-foundation` and `change-002-db-seed` are merged (already in main)
+- Does NOT depend on `change-004-cart-whatsapp` or `change-005-admin-ui`
 
-## Sub-change Split — `change-004-admin-ui` (PR #4)
+## Sub-change Split — `change-004-cart-whatsapp` (PR #4)
+
+### Scope
+- `app/schemas.py` (NEW, if not in change-003) — Pydantic v2 models
+- Routes in `app/routes/public.py`: `POST /ordenes`, `GET /ordenes/{numero_orden}/whatsapp`
+- `app/static/js/order.js` (NEW) — form submit handler that POSTs `/ordenes` and redirects to WhatsApp
+- `app/templates/public/order_pending.html` (NEW) — "¡Gracias por tu pedido!" page
+- `app/templates/public/partials/cart_summary.html` (MODIFIED) — add customer form fields
+- Server-side: `format_order_message()` helper, `build_whatsapp_url()` helper, atomic transaction
+- `app/static/img/wero-mascot.svg` (if not in change-003) — referenced in WhatsApp message
+- ~260-310 LOC
+
+### Why split (second half)
+- Transactional logic (Pydantic validation, atomic DB writes, URL building) is a different review concern than visual UI
+- Can be reviewed against scenarios that test the order flow end-to-end
+
+### Stacked-to-main position
+- Lands after `change-003-public-ui` is merged
+- DEPENDS on `change-003-public-ui`'s WeroCart object and components.css
+- Does NOT depend on `change-005-admin-ui`
+
+## Sub-change Split — `change-005-admin-ui` (PR #5)
 
 ### Scope
 - Admin login screen + signed cookie session middleware
@@ -89,7 +117,7 @@ The foundation (`change-001-foundation` + `change-002-db-seed`) gives us a worki
 - Can be reviewed independently of public UI
 
 ### Stacked-to-main position
-- Lands after `change-003-public-ui` is merged
+- Lands after `change-003-public-ui` and `change-004-cart-whatsapp` are merged
 - DEPENDS on the public UI's component CSS being in main
 
 ## Capabilities
