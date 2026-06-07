@@ -1,0 +1,362 @@
+/* ==========================================================================
+   Admin Panel — El Perro Wero
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Admin Container
+   -------------------------------------------------------------------------- */
+
+.admin-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+}
+
+.admin-page-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: var(--color-amarillo);
+  margin-bottom: var(--space-4);
+}
+
+.admin-page-desc {
+  color: var(--color-text-light);
+  margin-bottom: var(--space-4);
+  font-size: 0.95rem;
+}
+
+.admin-main {
+  min-height: calc(100vh - 60px);
+  background: var(--color-bg-dark);
+}
+
+/* --------------------------------------------------------------------------
+   Topbar
+   -------------------------------------------------------------------------- */
+
+.admin-topbar {
+  background: var(--color-azul-rey-dark);
+  padding: 0 var(--space-4);
+  border-bottom: 3px solid var(--color-magenta);
+}
+
+.admin-topbar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow-x: auto;
+}
+
+.admin-topbar__link {
+  display: inline-block;
+  padding: var(--space-3) var(--space-3);
+  color: var(--color-white);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-topbar__link:hover {
+  color: var(--color-amarillo);
+}
+
+.admin-topbar__link--active {
+  color: var(--color-amarillo) !important;
+  border-bottom-color: var(--color-amarillo);
+}
+
+.admin-topbar__link--logout {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.admin-topbar__link--logout:hover {
+  color: var(--color-magenta);
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard
+   -------------------------------------------------------------------------- */
+
+.admin-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-5);
+  padding: var(--space-5) 0;
+}
+
+.admin-nav-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-6) var(--space-4);
+  background: var(--color-azul-rey-dark);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-nav-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.3);
+  border-color: var(--color-magenta);
+}
+
+.admin-nav-card__icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-3);
+}
+
+.admin-nav-card__title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  color: var(--color-amarillo);
+  margin-bottom: var(--space-2);
+}
+
+.admin-nav-card__desc {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   Admin Table
+   -------------------------------------------------------------------------- */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-4) 0;
+  font-size: 0.9rem;
+  background: var(--color-azul-rey-dark);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+.admin-table th {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--color-amarillo);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+}
+
+.admin-table tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-table tr:last-child {
+  border-bottom: none;
+}
+
+.admin-table tr:hover {
+  background: rgba(236, 72, 153, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   Toggle Buttons
+   -------------------------------------------------------------------------- */
+
+.toggle-button {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.toggle-button:hover {
+  transform: scale(1.05);
+}
+
+.toggle-button--available {
+  background: #10B981;
+  color: var(--color-white);
+}
+
+.toggle-button--soldout {
+  background: var(--color-amarillo);
+  color: var(--color-text-dark);
+}
+
+/* --------------------------------------------------------------------------
+   Status Badges
+   -------------------------------------------------------------------------- */
+
+.status-badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-badge--available {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+}
+
+.status-badge--soldout {
+  background: rgba(234, 179, 8, 0.2);
+  color: var(--color-amarillo);
+}
+
+/* --------------------------------------------------------------------------
+   Admin Form
+   -------------------------------------------------------------------------- */
+
+.admin-form {
+  max-width: 600px;
+  margin: var(--space-4) 0;
+}
+
+.form-group {
+  margin-bottom: var(--space-4);
+}
+
+.form-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-amarillo);
+  margin-bottom: var(--space-2);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--space-3);
+  background: var(--color-azul-rey-dark);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+  font-size: 1rem;
+  transition: border-color 0.15s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-magenta);
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   Flash Message
+   -------------------------------------------------------------------------- */
+
+.admin-flash {
+  padding: var(--space-3) var(--space-4);
+  background: #10B981;
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+}
+
+.admin-flash--error {
+  background: var(--color-magenta);
+}
+
+/* --------------------------------------------------------------------------
+   Login
+   -------------------------------------------------------------------------- */
+
+.admin-login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: var(--space-4);
+}
+
+.admin-login-card {
+  background: var(--color-azul-rey-dark);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  width: 100%;
+  max-width: 400px;
+  border: 2px solid rgba(236, 72, 153, 0.3);
+}
+
+.admin-login__title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: var(--color-amarillo);
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+
+.admin-login__subtitle {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-5);
+  font-size: 0.9rem;
+}
+
+/* --------------------------------------------------------------------------
+   Utility
+   -------------------------------------------------------------------------- */
+
+.text-amarillo {
+  color: var(--color-amarillo);
+}
+
+.admin-empty {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: var(--space-6);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 600px) {
+  .admin-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-table {
+    font-size: 0.8rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: var(--space-1) var(--space-2);
+  }
+}
