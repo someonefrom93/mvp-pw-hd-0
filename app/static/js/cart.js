@@ -83,7 +83,7 @@ function renderCart() {
   const fabCount = $('.cart-fab__count');
   const totalSection = $('#cart-total');
   const totalAmount = $('#cart-total-amount');
-  const formSection = $('#order-form-section');
+  const orderForm = $('#order-form');
   const confirmBtn = $('#btn-confirmar');
 
   // FAB count
@@ -98,7 +98,7 @@ function renderCart() {
   if (WeroCart.isEmpty()) {
     container.innerHTML = `<p class="cart-empty">Tu carrito está vacío</p>`;
     if (totalSection) totalSection.style.display = 'none';
-    if (formSection) formSection.style.display = 'none';
+    if (orderForm) orderForm.style.display = 'none';
     if (confirmBtn) confirmBtn.disabled = true;
     return;
   }
@@ -123,7 +123,7 @@ function renderCart() {
 
   if (totalSection) totalSection.style.display = '';
   if (totalAmount) totalAmount.textContent = fmt(WeroCart.total());
-  if (formSection) formSection.style.display = '';
+  if (orderForm) orderForm.style.display = '';
   if (confirmBtn) confirmBtn.disabled = false;
 }
 
