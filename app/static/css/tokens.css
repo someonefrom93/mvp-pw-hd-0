@@ -1,0 +1,37 @@
+:root {
+  /* Colors */
+  --color-azul-rey: #1E3A8A;
+  --color-azul-rey-dark: #0F1E47;
+  --color-magenta: #EC4899;
+  --color-magenta-dark: #BE185D;
+  --color-amarillo: #FACC15;
+  --color-amarillo-dark: #CA8A04;
+  --color-white: #FFFFFF;
+  --color-text: #FFFFFF;
+  --color-text-dark: #0F1E47;
+
+  /* Fonts */
+  --font-display: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-magenta: 0 8px 24px rgba(236, 72, 153, 0.4);
+  --shadow-amarillo: 0 8px 24px rgba(250, 204, 21, 0.4);
+  --shadow-azul: 0 8px 24px rgba(30, 58, 138, 0.4);
+}
